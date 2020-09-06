@@ -1,0 +1,17 @@
+{
+  "name": "tame-of-thrones",
+  "version": "1.0.0",
+  "description": "Tame of thrones",
+  "main": "geektrust.js",
+  "scripts": {
+    "start": "node geektrust.js",
+    "test": "mocha"
+  },
+  "author": "Jayeesha Ghosh",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "fs": "0.0.1-security",
+    "mocha": "7.2.0"
+  }
+}
