@@ -4,40 +4,45 @@ const MINIMUM_ALLY_REQUIRED = 3
 const MESSAGE_FROM = 'SPACE'
 const NOT_FOUND_IN_ARRAY_INDEX = -1
 
-const kingdom = [
-    kingdomEmblame.createObject('SPACE', 'GORILLA'),
-    kingdomEmblame.createObject('LAND', 'PANDA'),
-    kingdomEmblame.createObject('AIR', 'OWL'),
-    kingdomEmblame.createObject('WATER', 'OCTOPUS'),
-    kingdomEmblame.createObject('ICE', 'MAMMOTH'),
-    kingdomEmblame.createObject('FIRE', 'DRAGON')
-]
 
+async function getAllyKingdoms(fileData) {
+    const kingdom = [
+        kingdomEmblame.createObject('SPACE', 'GORILLA'),
+        kingdomEmblame.createObject('LAND', 'PANDA'),
+        kingdomEmblame.createObject('AIR', 'OWL'),
+        kingdomEmblame.createObject('WATER', 'OCTOPUS'),
+        kingdomEmblame.createObject('ICE', 'MAMMOTH'),
+        kingdomEmblame.createObject('FIRE', 'DRAGON')
+    ]
+    // let allyKingdoms = []
+    const allyKingdoms = await fileData.map((line) => 
+         checkIfAllyKingdom(kingdom, line)
+         .then(result => console.log("hello",result))
+        
+        // kingdom && !allyKingdoms.includes(kingdom) ? allyKingdoms.push(kingdom) : false
+    )
 
-function getAllyKingdoms(fileData) {
-    let allyKingdoms = []
-    fileData.forEach((line) => {
-        const kingdom = checkIfAllyKingdom(line)
-        kingdom && !allyKingdoms.includes(kingdom) ? allyKingdoms.push(kingdom) : false
-    })
+    // console.log(allyKingdoms)
 
-    const outputString = allyKingdoms.length < MINIMUM_ALLY_REQUIRED ? 
-                        'NONE' :
-                        `${MESSAGE_FROM} `+allyKingdoms.toString().replace(/,/g," ")
-    return outputString
+    // const outputString = allyKingdoms.length < MINIMUM_ALLY_REQUIRED ? 
+    //                     'NONE' :
+    //                     `${MESSAGE_FROM} `+allyKingdoms.toString().replace(/,/g," ")
+    // return outputString
 }
 
-function checkIfAllyKingdom(line) {
-        let inputMessage = line.message
-        const inputKingdom = line.kingdom
-        const kingdomFound = findKingdomByName(inputKingdom)
+ async function checkIfAllyKingdom(kingdom, line) {
+     
+        const kingdomFound = await findKingdomByName(kingdom, line.kingdom)
         
         if(!kingdomFound) return
-        const emblame = kingdomFound.emblame
-        const key = kingdomFound.key
+        const key = await  kingdomFound.key
+        // return kingdomFound
+        const inputMessage = await cipher.decrypt(line.message, key)
+        console.log("decrypted",inputMessage)
 
-        inputMessage = cipher.decrypt(inputMessage, key)
-        const emblameFound = findEmblameFromMessage(inputMessage, emblame)
+        const emblame = await kingdomFound.emblame
+        const emblameFound = await findEmblameFromMessage(inputMessage.split(''), emblame.split(''))
+        // .then(result => console.log("emblame ",result))
                 
         if(!emblameFound) {
             return
@@ -48,22 +53,27 @@ function checkIfAllyKingdom(line) {
 
 }
 
-function findKingdomByName(name){
-    return kingdom.find(kingdom => kingdom.name === name)
+function findKingdomByName(kingdom, name){
+    const result =  kingdom.find(kingdom => kingdom.name === name)
+    if(result) return result
 }
 
-function findEmblameFromMessage(message, emblame) {
-    message = message.split('')
-    let assortedString = ''
+async function findEmblameFromMessage(message, emblame) {
 
-    emblame.split('').forEach(eachEmblameLetter =>{
-        const indexFound = message.indexOf(eachEmblameLetter)
+   const test = await emblame.reduce((obj, eachEmblameLetter) =>{
+        const indexFound = obj.remainingArray.indexOf(eachEmblameLetter)
         if(indexFound > NOT_FOUND_IN_ARRAY_INDEX) {
-            assortedString += message.splice(indexFound, 1)
+            const assortedString = obj.assortedString + obj.remainingArray.splice(indexFound, 1)
+            const remainingArray = obj.remainingArray
+
+            return { remainingArray, assortedString }
         }
-    })
-    
-    return assortedString === emblame ? assortedString : false;
+        else {
+            return { remainingArray: obj.remainingArray, assortedString: obj.assortedString }
+        }
+    }, {remainingArray: message, assortedString: ""})
+    console.log("assorted ", test.assortedString)
+    return test.assortedString
 }
 
 module.exports = { getAllyKingdoms, checkIfAllyKingdom, findEmblameFromMessage }
