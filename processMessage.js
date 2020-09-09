@@ -31,18 +31,17 @@ async function getAllyKingdoms(fileData) {
 }
 
  async function checkIfAllyKingdom(kingdom, line) {
-     
+
         const kingdomFound = await findKingdomByName(kingdom, line.kingdom)
         
         if(!kingdomFound) return
         const key = await  kingdomFound.key
-        // return kingdomFound
+        
         const inputMessage = await cipher.decrypt(line.message, key)
         console.log("decrypted",inputMessage)
 
         const emblame = await kingdomFound.emblame
         const emblameFound = await findEmblameFromMessage(inputMessage.split(''), emblame.split(''))
-        // .then(result => console.log("emblame ",result))
                 
         if(!emblameFound) {
             return
