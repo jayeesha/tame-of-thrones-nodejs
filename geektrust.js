@@ -2,6 +2,7 @@ const fs = require('fs');
 const processMessage = require('./processMessage.js')
 
 try {
+    
     const args = process.argv.slice(2);
     if (args.length !== 1) throw Error('Uh ho! Please enter the file path or ensure that you are passing only one input file path');
 
@@ -14,10 +15,11 @@ try {
         const kingdom = allWords.slice(0, 1).toString()
         return { kingdom, message }
     })
-    
-    const allyKingdoms = processMessage.getAllyKingdoms(fileData)
 
-    // console.log(allyKingdoms)
+    
+    processMessage.getAllyKingdoms(fileData)
+
+    
 }
 catch (error) {
     console.log('Error: ', error);
