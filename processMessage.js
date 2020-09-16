@@ -23,16 +23,14 @@ async function getAllyKingdoms(fileData) {
             .then(result => result)
     )
 
-    Promise.all(allyKingdoms)
+    return await Promise.all(allyKingdoms)
         .then(results => {
-            fp.pipe(
+            return fp.pipe(
                 filterResponse,
                 handleResponse
             )(results)
         })
-        .catch(e => {
-            console.error(e);
-        })
+        .catch(e => e)
 
 }
 
@@ -42,10 +40,9 @@ function filterResponse(results) {
 
 function handleResponse(test) {
 
-    const outputString = test.length < MINIMUM_ALLY_REQUIRED ?
+    return test.length < MINIMUM_ALLY_REQUIRED ?
         'NONE' :
         `${MESSAGE_FROM} ` + test.toString().replace(/,/g, " ")
-    console.log(outputString)
 }
 
 async function checkIfAllyKingdom(kingdom, line) {
