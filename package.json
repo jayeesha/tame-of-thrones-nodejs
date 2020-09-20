@@ -5,7 +5,8 @@
   "main": "geektrust.js",
   "scripts": {
     "start": "node geektrust.js",
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc npm run test"
   },
   "author": "Jayeesha Ghosh",
   "license": "ISC",
@@ -13,6 +14,10 @@
     "chai": "^4.2.0",
     "fs": "0.0.1-security",
     "lodash": "^4.17.20",
-    "mocha": "7.2.0"
+    "mocha": "7.2.0",
+    "sinon": "^9.0.3"
+  },
+  "devDependencies": {
+    "nyc": "^15.1.0"
   }
 }
