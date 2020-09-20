@@ -19,18 +19,18 @@ async function checkIfAllyKingdom(kingdom, line) {
 
     const inputMessage = _.curry(decryptMessage)(line)
 
-    const emblameFound = objects => {
-        const emblameFound = findEmblameFromMessage(objects.finalMessage, objects.kingdom.emblame)
-        if (emblameFound) return objects.kingdom.name
+    const emblameFound = decryptedMessageAndKingdom => {
+        const emblameFound = findEmblameFromMessage(decryptedMessageAndKingdom.finalMessage, decryptedMessageAndKingdom.kingdom.emblame)
+        if (emblameFound) return decryptedMessageAndKingdom.kingdom.name
     }
-    
-    const test = await fp.pipe(
+
+    const allyKingdom = await fp.pipe(
         searchForKingdom,
         inputMessage,
         emblameFound
     )(line)
 
-    return test
+    return allyKingdom
 
 }
 
