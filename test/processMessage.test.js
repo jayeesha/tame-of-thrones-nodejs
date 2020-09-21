@@ -2,98 +2,59 @@ const expect = require('chai').expect
 const processMessage = require('../processMessage')
 
 
-// describe('processMessage.checkIfAllyKingdom() unit tests', () => {
-//     describe('processMessage.checkIfAllyKingdom() Test', () => {
-//         it('should equal LAND', () => {
-//             const input ={
-//                 kingdom:'LAND',
-//                 message:'FDIXXSOKKOFBBMU'
-//             }
-//             const result = processMessage.checkIfAllyKingdom(input);
-//             expect(result).to.equal('LAND');
-//         });
-//     });
-//     describe('processMessage.checkIfAllyKingdom() Test', () => {
-//         it('should equal WATER', () => {
-//             const input ={
-//                 kingdom:'WATER',
-//                 message:'SUMMER IS VJAVWBZ'
-//             }
-//             const result = processMessage.checkIfAllyKingdom(input);
-//             expect(result).to.equal('WATER');
-//         });
-//     });
-//     describe('processMessage.checkIfAllyKingdom() Test', () => {
-//         it('should equal false', () => {
-//             const input ={
-//                 kingdom:'AIR',
-//                 message:'OWLAOWLBOWLC'
-//             }
-//             const result = processMessage.checkIfAllyKingdom(input);
-//             expect(result).to.equal(undefined);
-//         });
-//     });
-// })
 
-// describe('processMessage.findEmblameFromMessage() unit tests', () => {
-//     describe('processMessage.findEmblameFromMessage() ', () => {
-//         it('should equal PANDA', () => {
-//             const message = 'AYDSSNJFFJAWWHP' 
-//             const emblame = 'PANDA'
+describe('Unit tests for processMessage.js', () => {
+    //filterResponse
+    describe('Check whether the duplicate and undefined values are filtered out from the array', () => {
+        it('should equal LAND ICE FIRE', () => {
+            const input = [ 'LAND', 'ICE', 'ICE', 'ICE', undefined, undefined, 'FIRE' ]
+            const outputExpected = [ 'LAND', 'ICE', 'FIRE' ]
+            const result = processMessage.filterResponse(input);
+            expect(result).to.eql(outputExpected);
+        });
+    });
+    //handleResponse
+    describe('Return the sending kingdom plus ally kingdoms only if no. of ally kingdoms is 3 or more', () => {
+        it('should equal SPACE LAND ICE FIRE', () => {
+            const input = [ 'LAND', 'ICE', 'FIRE' ]
+            const outputExpected = 'SPACE LAND ICE FIRE'
+            const result = processMessage.handleResponse(input);
+            expect(result).to.equal(outputExpected);
+        });
+    });
+    describe('Return NONE if no. of ally kingdoms is less than 3', () => {
+        it('should equal NONE', () => {
+            const input = [ 'ICE', 'FIRE' ]
+            const outputExpected = 'NONE'
+            const result = processMessage.handleResponse(input);
+            expect(result).to.equal(outputExpected);
+        });
+    });
+    //getAllyKingdoms
+    describe('Check async function getAllyKingdoms to return the ally kingdoms', () => {
+        it('should equal NONE', () => {
+            const input = [{ kingdom: 'LAND', message: 'FDIXXSOKKOFBBMU' },
+            { kingdom: 'ICE', message: 'MOMAMVTMTMHTM' },
+            { kingdom: 'WATER', message: 'SUMMER IS COMING' },
+            { kingdom: 'AIR', message: 'OWLAOWLBOWLC' },
+            { kingdom: 'FIRE', message: 'AJXGAMUTA' }]
+            const outputExpected= 'SPACE LAND ICE FIRE'
+            processMessage.getAllyKingdoms(input).then(
+                result => expect(result).to.equal(outputExpected)
+            )
+        });
+    });
+    describe('Check async function getAllyKingdoms to return NONE if no. of ally kingdoms less than 3', () => {
+        it('should equal NONE', () => {
+            const input = [{ kingdom: 'AIR', message: 'OWLAOWLBOWLC' },
+            { kingdom: 'LAND', message: 'OFBBMUFDICCSO' },
+            { kingdom: 'ICE', message: 'VTBTBHTBBBOBAB' },
+            { kingdom: 'WATER', message: 'SUMMER IS COMING' }]
+            const outputExpected= 'NONE'
+            processMessage.getAllyKingdoms(input).then(
+                result => expect(result).to.equal(outputExpected)
+            )
+        });
+    });
 
-//             const result = processMessage.findEmblameFromMessage(message, emblame);
-//             expect(result).to.equal('PANDA');
-//         });
-//     });
-
-//     describe('processMessage.findEmblameFromMessage() ', () => {
-//         it('should return nothing', () => {
-//             const message = 'LTIXLTIYLTIZ' 
-//             const emblame = 'OWL'
-
-//             const result = processMessage.findEmblameFromMessage(message, emblame);
-//             expect(result).to.equal(false);
-//         });
-//     });
-// });
-
-
-// describe('Tame of thrones integrated tests', () => {
-//     describe('Final output Test for SPACE', () => {
-//         it('should equal LAND ICE WATER FIRE', () => {
-//             const input = [ 
-//            { kingdom: 'LAND', message: 'FDIXXSOKKOFBBMU' },
-//            { kingdom: 'ICE', message: 'MOMAMVTMTMHTM' },
-//            { kingdom: 'WATER', message: 'SUMMER IS VJAVWBZ' },
-//            { kingdom: 'AIR', message: 'OWLAOWLBOWLC' },
-//            { kingdom: 'FIRE', message: 'AJXGAMUTA' },
-//            { kingdom: 'RANDOM', message: 'AJXGAMUTA' }]
-
-//             const outputExpected = 'SPACE LAND ICE WATER FIRE'
-//             const result = processMessage.getAllyKingdoms(input);
-//             expect(result).to.eql(outputExpected);
-//         });
-//     });
-//     describe('Final output Test for SPACE', () => {
-//         it('should equal NONE', () => {
-//             const input = [ 
-//            { kingdom: 'AIR', message: 'OWLAOWLBOWLC' },
-//            { kingdom: 'LAND', message: 'OFBBMUFDICCSO' },
-//            { kingdom: 'ICE', message: 'VTBTBHTBBBOBAB' },
-//            { kingdom: 'WATER', message: 'SUMMER IS COMING' }]
-
-//             const result = processMessage.getAllyKingdoms(input);
-//             expect(result).to.eql('NONE');
-//         });
-//     });
-//     describe('Final output Test for SPACE', () => {
-//         it('should equal NONE', () => {
-//             const input = [ 
-//            { kingdom: 'AIR', message: 'OWLAOWLBOWLC' },
-//            { kingdom: 'LAND', message: 'OFBBMUFDICCSO' }]
-
-//             const result = processMessage.getAllyKingdoms(input);
-//             expect(result).to.eql('NONE');
-//         });
-//     });
-// })
+})
