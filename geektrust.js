@@ -14,6 +14,7 @@ function readAndResolveInput(filePath) {
         const allWords = line.split(" ")
         const message = allWords.slice(1).join(" ")
         const kingdom = allWords.slice(0, 1).toString()
+        console.log({ kingdom, message })
         return { kingdom, message }
     })
     const resolve = result => result.then(res => console.log(res))

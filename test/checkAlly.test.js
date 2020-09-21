@@ -15,7 +15,7 @@ describe('Unit tests for checkAlly.js', () => {
             kingdomEmblame.createObject('FIRE', 'DRAGON')]
     })
     //findKingdomByName
-    describe('check whether LAND exists among the kingdoms', () => {
+    describe('check whether LAND kingdom exists among the kingdoms', () => {
         it('should equal to the object which contains LAND', () => {
             const input = "LAND"
             const result = checkAlly.findKingdomByName(kingdom, input);
@@ -24,7 +24,7 @@ describe('Unit tests for checkAlly.js', () => {
 
         });
     });
-    describe('check whether RANDOM exists among the kingdoms', () => {
+    describe('check whether RANDOM kingdom exists among the kingdoms', () => {
         it('should equal to false if it doesnt contain RANDOM', () => {
             const input = "RANDOM"
             const result = checkAlly.findKingdomByName(kingdom, input);
@@ -33,7 +33,7 @@ describe('Unit tests for checkAlly.js', () => {
         });
     });
     //findEmblameFromMessage
-    describe('find whether emblame exists in decoded message', () => {
+    describe('find whether PANDA emblame exists in decrypted message AYDSSNJFFJAWWHP', () => {
         it('should be equal to true', () => {
             const message = 'AYDSSNJFFJAWWHP'
             const emblame = 'PANDA'
@@ -43,7 +43,7 @@ describe('Unit tests for checkAlly.js', () => {
         });
     });
 
-    describe('find whether emblame exists in decoded message', () => {
+    describe('find whether emblame OWL exists in decrypted message LTIXLTIYLTIZ', () => {
         it('should be equal to false', () => {
             const message = 'LTIXLTIYLTIZ'
             const emblame = 'OWL'
@@ -53,33 +53,32 @@ describe('Unit tests for checkAlly.js', () => {
         });
     });
     // checkIfAllyKingdom
-    describe('processMessage.checkIfAllyKingdom() unit tests', () => {
-        describe('processMessage.checkIfAllyKingdom() Test', () => {
-            it('should equal LAND', () => {
-                const input = { kingdom: "LAND", message: "FDIXXSOKKOFBBMU" }
-                const result = checkAlly.checkIfAllyKingdom(kingdom, input);
-                expect(result).to.equal('LAND');
-            });
+    describe('Check whether async checkIfAllyKingdom gives correct kingdom if valid encrypted message is passed', () => {
+        it('should equal LAND', () => {
+            const input = { kingdom: "LAND", message: "FDIXXSOKKOFBBMU" }
+            checkAlly.checkIfAllyKingdom(kingdom, input)
+                .then(result =>
+                    expect(result).to.equal('LAND')
+                )
         });
-        // describe('processMessage.checkIfAllyKingdom() Test', () => {
-        //     it('should equal WATER', () => {
-        //         const input = {
-        //             kingdom: 'WATER',
-        //             message: 'SUMMER IS VJAVWBZ'
-        //         }
-        //         const result = processMessage.checkIfAllyKingdom(input);
-        //         expect(result).to.equal('WATER');
-        //     });
-        // });
-        // describe('processMessage.checkIfAllyKingdom() Test', () => {
-        //     it('should equal false', () => {
-        //         const input = {
-        //             kingdom: 'AIR',
-        //             message: 'OWLAOWLBOWLC'
-        //         }
-        //         const result = processMessage.checkIfAllyKingdom(input);
-        //         expect(result).to.equal(undefined);
-        //     });
-        // });
-    })
+    });
+    describe('Check whether async checkIfAllyKingdom gives undefined if invalid encrypted message is passed', () => {
+        it('should equal undefined', () => {
+            const input = { kingdom: "WATER", message: "SUMMER IS COMING" }
+            checkAlly.checkIfAllyKingdom(kingdom, input)
+                .then(result =>
+                    expect(result).to.be.undefined
+                )
+        });
+    });
+    describe('Check whether async checkIfAllyKingdom gives correct kingdom if valid encrypted message with spaces between words is passed', () => {
+        it('should equal WATER', () => {
+            const input = { kingdom: "WATER", message: "SUMMER IS VJAVWBZ" }
+            checkAlly.checkIfAllyKingdom(kingdom, input)
+                .then(result =>
+                    expect(result).to.equal('WATER')
+                )
+        });
+    });
+
 });
