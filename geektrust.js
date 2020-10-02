@@ -3,8 +3,13 @@ const processMessage = require('./processMessage.js')
 const fp = require('lodash/fp')
 
 
-const args = process.argv.slice(2);
-if (args.length !== 1) throw Error('Uh ho! Please enter the file path or ensure that you are passing only one input file path');
+function commandLineArgument() {
+    const args = process.argv.slice(2)
+    if (args.length !== 1)
+        throw Error('Uh ho! Please enter the file path or ensure that you are passing only one input file path');
+    else
+        return args[0]
+}
 
 function readAndResolveInput(filePath) {
     const readFile = file => fs.readFileSync(file, "utf8")
@@ -14,7 +19,6 @@ function readAndResolveInput(filePath) {
         const allWords = line.split(" ")
         const message = allWords.slice(1).join(" ")
         const kingdom = allWords.slice(0, 1).toString()
-        console.log({ kingdom, message })
         return { kingdom, message }
     })
     const resolve = result => result.then(res => console.log(res))
@@ -29,7 +33,8 @@ function readAndResolveInput(filePath) {
     )(filePath)
 }
 
-readAndResolveInput(args[0])
+readAndResolveInput(commandLineArgument())
 
+module.exports.readAndResolveInput = readAndResolveInput
 
 

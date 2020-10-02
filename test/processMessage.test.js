@@ -1,11 +1,9 @@
 const expect = require('chai').expect
 const processMessage = require('../processMessage')
 
-
-
 describe('Unit tests for processMessage.js', () => {
     //filterResponse
-    describe('Check whether the duplicate and undefined values are filtered out from the array', () => {
+    describe('filterResponse() - Check whether the duplicate and undefined values are filtered out from the array', () => {
         it('should equal LAND ICE FIRE', () => {
             const input = [ 'LAND', 'ICE', 'ICE', 'ICE', undefined, undefined, 'FIRE' ]
             const outputExpected = [ 'LAND', 'ICE', 'FIRE' ]
@@ -14,7 +12,7 @@ describe('Unit tests for processMessage.js', () => {
         });
     });
     //handleResponse
-    describe('Return the sending kingdom plus ally kingdoms only if no. of ally kingdoms is 3 or more', () => {
+    describe('handleResponse() - Return the sending kingdom plus ally kingdoms only if no. of ally kingdoms is 3 or more', () => {
         it('should equal SPACE LAND ICE FIRE', () => {
             const input = [ 'LAND', 'ICE', 'FIRE' ]
             const outputExpected = 'SPACE LAND ICE FIRE'
@@ -22,7 +20,7 @@ describe('Unit tests for processMessage.js', () => {
             expect(result).to.equal(outputExpected);
         });
     });
-    describe('Return NONE if no. of ally kingdoms is less than 3', () => {
+    describe('handleResponse() - Return NONE if no. of ally kingdoms is less than 3', () => {
         it('should equal NONE', () => {
             const input = [ 'ICE', 'FIRE' ]
             const outputExpected = 'NONE'
@@ -31,7 +29,7 @@ describe('Unit tests for processMessage.js', () => {
         });
     });
     //getAllyKingdoms
-    describe('Check async function getAllyKingdoms to return the ally kingdoms', () => {
+    describe('getAllyKingdoms() - Check async function getAllyKingdoms to return the ally kingdoms', () => {
         it('should equal NONE', () => {
             const input = [{ kingdom: 'LAND', message: 'FDIXXSOKKOFBBMU' },
             { kingdom: 'ICE', message: 'MOMAMVTMTMHTM' },
@@ -44,7 +42,7 @@ describe('Unit tests for processMessage.js', () => {
             )
         });
     });
-    describe('Check async function getAllyKingdoms to return NONE if no. of ally kingdoms less than 3', () => {
+    describe('getAllyKingdoms() - Check async function getAllyKingdoms to return NONE if no. of ally kingdoms less than 3', () => {
         it('should equal NONE', () => {
             const input = [{ kingdom: 'AIR', message: 'OWLAOWLBOWLC' },
             { kingdom: 'LAND', message: 'OFBBMUFDICCSO' },

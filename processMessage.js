@@ -30,7 +30,6 @@ async function getAllyKingdoms(fileData) {
                 handleResponse
             )(results)
         })
-        .catch(e => e)
 
 }
 

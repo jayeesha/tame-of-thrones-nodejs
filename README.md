@@ -8,7 +8,7 @@ Install the packages using:
 
 To run the code provide the path of the input file path. In this folder structure:
 
-``` npm start input.txt ```
+``` npm start ./mocks/input.txt ```
 
 Edit the input.txt to test different input patterns.
 
