@@ -4,11 +4,11 @@ const fp = require('lodash/fp')
 
 const cipher = require('./caesarCipher')
 const NOT_FOUND_IN_ARRAY_INDEX = -1
-
+const result = { "SPACE": [], "LAND": [], "ICE": [], "AIR": [], "WATER": [], "FIRE": [] }
 
 async function checkIfAllyKingdom(kingdom, line) {
 
-    const kingdomFound = (kingdom, line) => findKingdomByName(kingdom, line.kingdom)
+    const kingdomFound = (kingdom, line) => findKingdomByName(kingdom, line.receiverKingdom)
 
     const searchForKingdom = _.curry(kingdomFound)(kingdom)
 
@@ -20,11 +20,16 @@ async function checkIfAllyKingdom(kingdom, line) {
     const inputMessage = _.curry(decryptMessage)(line)
 
     const emblameFound = decryptedMessageAndKingdom => {
+        // console.log(decryptedMessageAndKingdom)
+        // console.log("line---",line)
         const emblameFound = findEmblameFromMessage(decryptedMessageAndKingdom.finalMessage, decryptedMessageAndKingdom.kingdom.emblame)
-        if (emblameFound) return decryptedMessageAndKingdom.kingdom.name
+        if (emblameFound) {
+            result[line.senderKingdom].push(line.receiverKingdom)
+            return result
+        }
     }
 
-    const allyKingdom = await fp.pipe(
+    const allyKingdom = fp.pipe(
         searchForKingdom,
         inputMessage,
         emblameFound
@@ -42,8 +47,11 @@ function findKingdomByName(kingdom, name) {
 function findEmblameFromMessage(message, emblame) {
 
     const test = emblame.split('').reduce((obj, eachEmblameLetter) => {
+
         const indexFound = obj.remainingArray.indexOf(eachEmblameLetter)
+
         if (indexFound > NOT_FOUND_IN_ARRAY_INDEX) {
+            
             const assortedString = obj.assortedString + obj.remainingArray.splice(indexFound, 1)
             const remainingArray = obj.remainingArray
 

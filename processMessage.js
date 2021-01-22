@@ -10,7 +10,7 @@ const MESSAGE_FROM = 'SPACE'
 async function getAllyKingdoms(fileData) {
 
     let kingdom = [
-        kingdomEmblame.createObject('SPACE', 'GORILLA'),
+        kingdomEmblame.createObject('SPACE', 'GORILLA'),// Emblem
         kingdomEmblame.createObject('LAND', 'PANDA'),
         kingdomEmblame.createObject('AIR', 'OWL'),
         kingdomEmblame.createObject('WATER', 'OCTOPUS'),
@@ -19,29 +19,40 @@ async function getAllyKingdoms(fileData) {
     ]
 
     const allyKingdoms = fileData.map((line) =>
-            checkAlly.checkIfAllyKingdom(kingdom, line)
+        checkAlly.checkIfAllyKingdom(kingdom, line)
             .then(result => result)
     )
 
+    // allyKingdoms()
+    // await console.log("allies ", allyKingdoms)
     return await Promise.all(allyKingdoms)
-        .then(results => {
-            return fp.pipe(
-                filterResponse,
-                handleResponse
-            )(results)
-        })
+                        .then(results => {
+                            return fp.pipe(
+                                filterResponse,
+                                handleResponse
+                            )(results)
+                        })
 
 }
 
 function filterResponse(results) {
-    return results.filter((items, index) => results.indexOf(items) === index && items !== undefined)
+
+    return results.filter((items, index) => items !== undefined)
+    
 }
 
 function handleResponse(test) {
+    const finalObject = test[test.length-1]
+    var maxLength = 0
+    var kingdomWithMaxAllies = ""
+    for( senderKingdom in finalObject){
+        if(maxLength < finalObject[senderKingdom].length){
+            maxLength = finalObject[senderKingdom].length
+            kingdomWithMaxAllies = senderKingdom
+        }
+    }
 
-    return test.length < MINIMUM_ALLY_REQUIRED ?
-        'NONE' :
-        `${MESSAGE_FROM} ` + test.toString().replace(/,/g, " ")
+    console.log(kingdomWithMaxAllies)
 }
 
 

@@ -12,16 +12,18 @@ function commandLineArgument() {
 }
 
 function readAndResolveInput(filePath) {
-    const readFile = file => fs.readFileSync(file, "utf8")
+    const readFile = file => fs.readFileSync(file, "utf8")// add error handling
     const trimFile = fileData => fileData.trim()
     const splitByLine = fileData => fileData.split("\n")
     const getInput = eachLine => eachLine.map(line => {
         const allWords = line.split(" ")
-        const message = allWords.slice(1).join(" ")
-        const kingdom = allWords.slice(0, 1).toString()
-        return { kingdom, message }
+        const message = allWords.slice(2).join(" ")
+        const senderKingdom = allWords.slice(0, 1).toString()
+        const receiverKingdom = allWords.slice(1, 2).toString()
+        // console.log({ senderKingdom, receiverKingdom, message })
+        return { senderKingdom, receiverKingdom, message }
     })
-    const resolve = result => result.then(res => console.log(res))
+    // const resolve = result => result.then(res => console.log(res))
 
     return fp.pipe(
         readFile,
@@ -29,7 +31,7 @@ function readAndResolveInput(filePath) {
         splitByLine,
         getInput,
         processMessage.getAllyKingdoms,
-        resolve
+        // resolve
     )(filePath)
 }
 
